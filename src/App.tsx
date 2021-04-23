@@ -1,25 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+// import logo from './assets/logo.svg';
+import './scss/main.scss';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { getRoutes, getNav } from './router';
+import { PNavbar } from './styled/Navbar';
+import { useDispatch } from 'react-redux';
+import { IAuthor } from './interfaces/author';
+import { Connect } from './libs/Connect';
+import { clearAuthors, clearPublishers } from './store/actions';
+import { parseAuthors } from './libs/author';
+import { Model } from './const/model';
+import { parsePublishers } from './libs/publisher';
+import { IPublisher } from './interfaces/publisher';
 
-function App() {
+const connect = new Connect();
+
+const App: React.FC = () => {
+  const routeComponents = getRoutes().map(({path, component}, key) => <Route exact path={path} component={component} key={key} />);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function init() {
+      const responseAuthor = await connect.find<IAuthor>(Model.Author);
+      if (responseAuthor) {
+        dispatch(clearAuthors(parseAuthors(responseAuthor)));
+      }
+      const responsePublisher = await connect.find<IPublisher>(Model.Publisher);
+      if (responsePublisher) {
+        dispatch(clearPublishers(parsePublishers(responsePublisher)));
+      }
+    }
+    init();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <PNavbar>
+          {getNav().map(({ path, label }, lp) => (
+            <Link to={path} key={lp}>{label}</Link>
+          ))}
+        </PNavbar>
+        <Switch>
+          {routeComponents}
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

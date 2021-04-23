@@ -1,0 +1,18 @@
+@import "../utilities/variables/colors";
+
+:root {
+  --color-white: #{$color-white};
+  --color-primary: #{$color-primary};
+  --color-success: #{$color-success};
+  --color-info: #{$color-info};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+
+  --color-bg: #{$light-bg-body};
+  --color-bg-body: #{$light-bg-body};
+  --color-bg-content: #{$light-bg-content};
+  --color-bg-hover: #{$light-bg-hover};
+  --color-secondary: #{$light-secondary};
+  --color-text: #{$light-text};
+  --color: #{$light-text};
+}
